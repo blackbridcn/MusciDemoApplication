@@ -5,9 +5,10 @@ import com.music.javabean.MusicData;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface LocalMusicContant {
+public interface MusicContant {
     class MusicPlayData {
-       public static List<MusicData> musicData =new ArrayList<>();
+        //播放列表
+        public static List<MusicData> musicData = new ArrayList<>();
 
     }
 }

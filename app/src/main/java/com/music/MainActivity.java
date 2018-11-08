@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.music.AppContant.LocalMusicContant;
+import com.music.AppContant.MusicContant;
 import com.music.service.MediaService;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mediaPlayerBinder = (MediaService.MediaPlayerBinder) iBinder;
             Log.e("TAG", "onServiceConnected: --------------------->");
-            String filePath = LocalMusicContant.MusicPlayData.musicData.get(0).getFilePath();
+            String filePath = MusicContant.MusicPlayData.musicData.get(0).getFilePath();
             //mediaPlayerBinder.playMusic(filePath);
         }
 

@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import com.music.AppContant.LocalMusicContant;
+import com.music.AppContant.MusicContant;
 import com.music.javabean.MusicData;
 import com.music.utils.StringUtils;
 
@@ -126,7 +126,7 @@ public class LocalMusicUitls {
             song.setSourceType(MusicData.sourceType.LOCAL);
 
             index++;
-            LocalMusicContant.MusicPlayData.musicData.add(song);
+            MusicContant.MusicPlayData.musicData.add(song);
         }
         cur.close();
     }
