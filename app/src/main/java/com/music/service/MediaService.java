@@ -7,6 +7,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.music.utils.ToastUtils;
+
 import java.io.IOException;
 
 public class MediaService extends Service {
@@ -24,6 +26,7 @@ public class MediaService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ToastUtils.init(this);
         Log.e(TAG, "onCreate: ---------------------------->");
     }
 

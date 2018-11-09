@@ -3,6 +3,7 @@ package com.music;
 import android.app.Activity;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.music.AppContant.MusicContant;
@@ -32,7 +33,7 @@ public class LocalMusicUitls {
     /**
      * 根据路径遍历文件夹查找歌词
      *
-     * @param P 歌曲所在文件夹路径
+     * @param  musicath  歌曲所在文件夹路径
      * @param type 歌词文件夹
      * @return 歌词文件夹path ，如果没有找到歌词return null；
      */
@@ -45,7 +46,7 @@ public class LocalMusicUitls {
                 for (File mFile : files) {
                     if (mFile.isDirectory()) {
                         if (mFile.getPath().contains("lrc")) //只遍历文件夹名中有lrc的子文件夹
-                           return getLrcPath(mFile.getPath(), type);//递归遍历
+                            return getLrcPath(mFile.getPath(), type);//递归遍历
                     } else {
                         lrcPath = mFile.getPath();
                         if (lrcPath.endsWith(type))
@@ -76,7 +77,9 @@ public class LocalMusicUitls {
                 MediaStore.Audio.Media.YEAR,
                 MediaStore.Audio.Media.MIME_TYPE,
                 MediaStore.Audio.Media.SIZE,
-                MediaStore.Audio.Media.DATA};
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.AudioColumns.ALBUM_ID
+        };
         cur = mActivity.getContentResolver()
                 .query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection
                         , null, null, null);
@@ -92,16 +95,19 @@ public class LocalMusicUitls {
             song.setFileName(filename);
             song.setMusicName(cur.getString(2));
             String filePath = cur.getString(9);
-            if (filePath!= null) {
-                song.setFilePath(filePath);
+
+            long albumId = cur.getLong(10);
+            song.setAlbumId(albumId);
+            if (filePath != null) {
+                song.setDataFilePath(filePath);
                 File file = new File(filePath);
                 String fileParent = file.getParent();
                 if (fileParent != null) {
-                     String lrcPath = getLrcPath(fileParent, filename.substring(0, filename.lastIndexOf(".")) + ".lrc");
-                     if(!StringUtils.isEmpty(lrcPath)){
-                         song.setHasLrc(true);
-                         song.setLrcPath(lrcPath);
-                     }
+                    String lrcPath = getLrcPath(fileParent, filename.substring(0, filename.lastIndexOf(".")) + ".lrc");
+                    if (!StringUtils.isEmpty(lrcPath)) {
+                        song.setHasLrc(true);
+                        song.setLrcPath(lrcPath);
+                    }
                 }
             }
             song.setMusicDuration(cur.getInt(3));
@@ -126,6 +132,7 @@ public class LocalMusicUitls {
             song.setSourceType(MusicData.sourceType.LOCAL);
 
             index++;
+            Log.e("TAG", "getMusicList: -----------> " +song.toString());
             MusicContant.MusicPlayData.musicData.add(song);
         }
         cur.close();

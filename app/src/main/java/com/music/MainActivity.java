@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mediaPlayerBinder = (MediaService.MediaPlayerBinder) iBinder;
             Log.e("TAG", "onServiceConnected: --------------------->");
-            String filePath = MusicContant.MusicPlayData.musicData.get(0).getFilePath();
+            String filePath = MusicContant.MusicPlayData.musicData.get(0).getDataFilePath();
             //mediaPlayerBinder.playMusic(filePath);
         }
 

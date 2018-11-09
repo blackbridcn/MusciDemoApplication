@@ -17,14 +17,19 @@ public class MusicData implements Serializable {
     private String musicArtist;
     // music album
     private String musicAlbum;
+    // [本地]专辑ID
+    private long albumId;
+
+    private String coverPath; // [在线]专辑封面路径
+
     // music year
     private String musicYear;
-    // file type
+    // file type mp3/avi
     private String fileType;
     // file size
     private String fileSize;
     // file path 歌曲资源存放路径
-    private String filePath;
+    private String dataFilePath;
 
     //歌曲类型：本地 1;网络 2; 未知:0;
     private int sourceType;
@@ -110,12 +115,12 @@ public class MusicData implements Serializable {
         this.fileSize = fileSize;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public String getDataFilePath() {
+        return dataFilePath;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setDataFilePath(String filePath) {
+        this.dataFilePath = filePath;
     }
 
     public int getSourceType() {
@@ -142,20 +147,32 @@ public class MusicData implements Serializable {
         this.hasLrc = hasLrc ? 1 : 0;
     }
 
+
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public void setAlbumId(long albumId) {
+        this.albumId = albumId;
+    }
+
+    public String getCoverPath() {
+        return coverPath;
+    }
+
+    public void setCoverPath(String coverPath) {
+        this.coverPath = coverPath;
+    }
+
     @Override
     public String toString() {
         return "MusicData{" +
-                "musicID=" + musicID +
                 ", fileName='" + fileName + '\'' +
                 ", musicName='" + musicName + '\'' +
-                ", musicDuration=" + musicDuration +
-                ", musicArtist='" + musicArtist + '\'' +
                 ", musicAlbum='" + musicAlbum + '\'' +
-                ", musicYear='" + musicYear + '\'' +
-                ", fileType='" + fileType + '\'' +
-                ", fileSize='" + fileSize + '\'' +
-                ", filePath='" + filePath + '\'' +
-                ", sourceType=" + sourceType +
+                ", albumId=" + albumId +
+                ", lrcPath='" + lrcPath + '\'' +
+                ", hasLrc=" + hasLrc +
                 '}';
     }
 }

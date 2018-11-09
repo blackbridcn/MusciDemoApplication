@@ -22,6 +22,11 @@ public interface AppContant {
             }
         }
 
+        /**
+         * 添加到播放列表中并返回indext
+         * @param data
+         * @return
+         */
         public static int addMusicToPlayList(MusicData data) {
             if (!currentPlayList.isEmpty()) {
                 if (!currentPlayList.contains(data)) {
@@ -53,6 +58,10 @@ public interface AppContant {
 
         public static int getCurrentPlayIndex() {
             return currentPlayIndex;
+        }
+
+        public static void setCurrentPlayIndex(int index){
+            currentPlayIndex=index;
         }
 
         /*public static int getMesuicDataByIndext(int indext) {

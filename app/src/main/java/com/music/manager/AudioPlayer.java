@@ -6,10 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.session.MediaSessionManager;
 
 import com.music.AppContant.AppContant;
 import com.music.javabean.MusicData;
+import com.music.utils.StringUtils;
+import com.music.utils.ToastUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,10 +70,15 @@ public class AudioPlayer {
         return mediaPlayer.isPlaying();
     }
 
+    /**
+     * 将歌曲添加到播放列表中并播放
+     *
+     * @param music
+     */
     public void addAndPlay(MusicData music) {
         if (music == null) return;
         int position = AppContant.PlayContant.addMusicToPlayList(music);
-        playCurrentList(position,music);
+        playCurrentList(position, music);
     }
 
     public void startPlayer() {
@@ -81,24 +87,36 @@ public class AudioPlayer {
 
     public void nextAudio() {
 
+    }public void playCurrentList(int position){
+        if(position>=0&&AppContant.PlayContant.getCurrentPlaySize()>position){
+            AppContant.PlayContant.setCurrentPlayIndex(position);
+            playCurrentList(position,AppContant.PlayContant.getCurrentPlayData());
+        }
     }
 
+
+
+
     public void playCurrentList(int index, MusicData music) {
+        if (index == -1 || music == null || StringUtils.isEmpty(music.getDataFilePath())) return;
+        AppContant.PlayContant.setCurrentPlayIndex(index);
+        mediaPlayer.reset();
         try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(music.getFilePath());
-            mediaPlayer.prepareAsync();
-            //state = STATE_PREPARING;
-            for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners) {
-                listener.onPlayChange(music);
-            }
-            PlayNotifier.get().showPlay(music);
-            MediaSessionManager.get().updateMetaData(music);
-            MediaSessionManager.get().updatePlaybackState();
+            mediaPlayer.setDataSource(music.getDataFilePath());
         } catch (IOException e) {
             e.printStackTrace();
             ToastUtils.show("当前歌曲无法播放");
+            return;
         }
+        mediaPlayer.prepareAsync();
+        //state = STATE_PREPARING;
+        for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners) {
+            listener.onPlayChange(music);
+        }
+        PlayNotifier.get().showPlay(music);
+       // AudioMediaSessionManager.getInstance().updateMetaData(music);
+       // AudioMediaSessionManager.getInstance().updatePlaybackState();
+
     }
 
     public void addMediaPlayerEventChanagerListener(onMediaPlayerEventChanagerListener listeners) {
