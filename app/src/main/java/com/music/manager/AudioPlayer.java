@@ -87,7 +87,9 @@ public class AudioPlayer {
 
     public void nextAudio() {
 
-    }public void playCurrentList(int position){
+    }
+
+    public void playCurrentList(int position){
         if(position>=0&&AppContant.PlayContant.getCurrentPlaySize()>position){
             AppContant.PlayContant.setCurrentPlayIndex(position);
             playCurrentList(position,AppContant.PlayContant.getCurrentPlayData());

@@ -19,8 +19,8 @@ public class MusicData implements Serializable {
     private String musicAlbum;
     // [本地]专辑ID
     private long albumId;
-
-    private String coverPath; // [在线]专辑封面路径
+    // [在线]专辑封面路径
+    private String coverPath;
 
     // music year
     private String musicYear;

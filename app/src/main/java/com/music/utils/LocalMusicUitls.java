@@ -1,4 +1,4 @@
-package com.music;
+package com.music.utils;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import com.music.AppContant.MusicContant;
 import com.music.javabean.MusicData;
-import com.music.utils.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
