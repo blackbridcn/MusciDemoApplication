@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.music.AppContant.AppContant;
 import com.music.javabean.MusicData;
@@ -14,12 +16,22 @@ import com.music.utils.ToastUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.prefs.Preferences;
 
 public class AudioPlayer {
     private static AudioPlayer instance;
+    private static final int STATE_IDLE = 0;
+    private static final int STATE_PREPARING = 1;
+    private static final int STATE_PLAYING = 2;
+    private static final int STATE_PAUSE = 3;
+    private int state = STATE_IDLE;
+
+    private static final long TIME_UPDATE = 300L;
+
     private Context mContext;
     private ArrayList<onMediaPlayerEventChanagerListener> playerEventChanagerListeners;
-
+    private Handler handler;
 
     private MediaPlayer mediaPlayer;
     private AudioFocusManager audioFocusManager;
@@ -28,7 +40,7 @@ public class AudioPlayer {
     private BroadcastReceiver audioBecomingNoisy = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
+            playPause();
         }
     };
 
@@ -40,10 +52,10 @@ public class AudioPlayer {
         this.mContext = mContext.getApplicationContext();
         audioFocusManager = new AudioFocusManager(this.mContext);
         playerEventChanagerListeners = new ArrayList<onMediaPlayerEventChanagerListener>();
-
+        handler = new Handler(Looper.getMainLooper());
         mediaPlayer = new MediaPlayer();
         noisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
-        mediaPlayer.setOnCompletionListener((mediaPlayer) -> nextAudio());
+        mediaPlayer.setOnCompletionListener((mediaPlayer) -> next());
         mediaPlayer.setOnPreparedListener((mediaPlayer) -> {
             if (isPlaying()) {
                 startPlayer();
@@ -62,14 +74,6 @@ public class AudioPlayer {
         }
     }
 
-    public boolean isPlaying() {
-        return mediaPlayer.isPlaying();
-    }
-
-    public boolean isPausing() {
-        return mediaPlayer.isPlaying();
-    }
-
     /**
      * 将歌曲添加到播放列表中并播放
      *
@@ -78,28 +82,27 @@ public class AudioPlayer {
     public void addAndPlay(MusicData music) {
         if (music == null) return;
         int position = AppContant.PlayContant.addMusicToPlayList(music);
-        playCurrentList(position, music);
+        play(position, music);
     }
 
-    public void startPlayer() {
-
-    }
 
     public void nextAudio() {
 
     }
 
-    public void playCurrentList(int position){
-        if(position>=0&&AppContant.PlayContant.getCurrentPlaySize()>position){
+    /**
+     * 播放当前播放列表中poition中歌曲
+     *
+     * @param position
+     */
+    public void play(int position) {
+        if (position >= 0 && AppContant.PlayContant.getCurrentPlaySize() > position) {
             AppContant.PlayContant.setCurrentPlayIndex(position);
-            playCurrentList(position,AppContant.PlayContant.getCurrentPlayData());
+            play(position, AppContant.PlayContant.getCurrentPlayData());
         }
     }
 
-
-
-
-    public void playCurrentList(int index, MusicData music) {
+    public void play(int index, MusicData music) {
         if (index == -1 || music == null || StringUtils.isEmpty(music.getDataFilePath())) return;
         AppContant.PlayContant.setCurrentPlayIndex(index);
         mediaPlayer.reset();
@@ -111,14 +114,140 @@ public class AudioPlayer {
             return;
         }
         mediaPlayer.prepareAsync();
-        //state = STATE_PREPARING;
+        performPlayEvent(music);
+    }
+
+    private void performPlayEvent(MusicData music) {
+        state = STATE_PREPARING;
         for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners) {
             listener.onPlayChange(music);
         }
         PlayNotifier.get().showPlay(music);
-       // AudioMediaSessionManager.getInstance().updateMetaData(music);
-       // AudioMediaSessionManager.getInstance().updatePlaybackState();
+        AudioMediaSessionManager.getInstance().updateMetaData(music);
+        AudioMediaSessionManager.getInstance().updatePlaybackState();
+    }
 
+    public void playPause() {
+        if (isPreparing()) {
+            stopPlayer();
+        } else if (isPlaying()) {
+            pausePlayer();
+        } else if (isPausing()) {
+            startPlayer();
+        } else {
+            play(getPlayPosition());
+        }
+    }
+
+    public void next() {
+        if (AppContant.PlayContant.currentPlayList.isEmpty()) {
+            return;
+        }
+
+        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
+        switch (mode) {
+            case SHUFFLE:
+                play(new Random().nextInt(musicList.size()));
+                break;
+            case SINGLE:
+                play(getPlayPosition());
+                break;
+            case LOOP:
+            default:
+                play(getPlayPosition() + 1);
+                break;
+        }
+    }
+
+    public void startPlayer() {
+        if (!isPreparing() && !isPausing())
+            return;
+        if (audioFocusManager.requestAudioFocus()) {
+            mediaPlayer.start();
+            state = STATE_PLAYING;
+            handler.post(mUpdatePlayProRunnable);
+            this.mContext.registerReceiver(audioBecomingNoisy, noisyFilter);
+            for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners) {
+                listener.onPlayStart();
+            }
+            PlayNotifier.get().showPlay(getPlayMusic());
+            AudioMediaSessionManager.getInstance().updatePlaybackState();
+        }
+    }
+
+    public void pausePlayer() {
+        pausePlayer(true);
+    }
+
+    public void pausePlayer(boolean abandonAudioFocus) {
+        if (!isPlaying()) {
+            return;
+        }
+        mediaPlayer.pause();
+        state = STATE_PAUSE;
+        handler.removeCallbacks(mUpdatePlayProRunnable);
+        PlayNotifier.get().showPause(getPlayMusic());
+        AudioMediaSessionManager.getInstance().updatePlaybackState();
+        this.mContext.unregisterReceiver(audioBecomingNoisy);
+        if (abandonAudioFocus) {
+            audioFocusManager.abandonAudioFocus();
+        }
+        for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners) {
+            listener.onPlayPause();
+        }
+    }
+
+    public void stopPlayer() {
+        if (isIdle()) {
+            return;
+        }
+        pausePlayer();
+        mediaPlayer.reset();
+        state = STATE_IDLE;
+    }
+
+    private int getNextPosition() {
+
+    }
+
+    private Runnable mUpdatePlayProRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isPlaying()) {
+                for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners) {
+                    listener.updatePlayProgress(mediaPlayer.getCurrentPosition());
+                }
+            }
+            handler.postDelayed(this, TIME_UPDATE);
+        }
+    };
+
+    public boolean isPlaying() {
+        return state == STATE_PLAYING;
+    }
+
+    public boolean isPausing() {
+        return state == STATE_PAUSE;
+    }
+
+    public boolean isPreparing() {
+        return state == STATE_PREPARING;
+    }
+
+    public boolean isIdle() {
+        return state == STATE_IDLE;
+    }
+
+    public long getAudioPosition() {
+        if (isPlaying() || isPausing()) {
+            return mediaPlayer.getCurrentPosition();
+        } else {
+            return 0;
+        }
+    }
+
+    public MusicData getPlayMusic() {
+        return AppContant.PlayContant.getCurrentPlayData();
     }
 
     public void addMediaPlayerEventChanagerListener(onMediaPlayerEventChanagerListener listeners) {
@@ -130,4 +259,5 @@ public class AudioPlayer {
         if (listeners != null)
             playerEventChanagerListeners.remove(listeners);
     }
+
 }

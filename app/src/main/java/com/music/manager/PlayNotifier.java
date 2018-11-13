@@ -42,6 +42,9 @@ public class PlayNotifier {
         playService.startForeground(NOTIFICATION_ID, buildNotification(playService, music, true));
     }
 
+    public void showPause(MusicData playMusic) {
+    }
+
     private Notification buildNotification(Context context, MusicData music, boolean isPlaying) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(AppContant.NotifierContant.EXTRA_NOTIFICATION, true);

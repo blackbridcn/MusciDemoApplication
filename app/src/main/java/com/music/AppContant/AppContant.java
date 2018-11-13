@@ -10,9 +10,10 @@ public interface AppContant {
 
         public PlayContant() {
         }
-
         //播放列表
-        public static ArrayList<MusicData> currentPlayList = new ArrayList<MusicData>();
+        public static List<MusicData> musicData = new ArrayList<>();
+        //播放列表
+        public static List<MusicData> currentPlayList = musicData;
         private static int currentPlayIndex = -1;
 
         public static void setCurrentPlayData(List<MusicData> playist) {

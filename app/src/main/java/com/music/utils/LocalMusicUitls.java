@@ -6,7 +6,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.music.AppContant.MusicContant;
+import com.music.AppContant.AppContant;
 import com.music.javabean.MusicData;
 
 import java.io.File;
@@ -132,7 +132,7 @@ public class LocalMusicUitls {
 
             index++;
             Log.e("TAG", "getMusicList: -----------> " +song.toString());
-            MusicContant.MusicPlayData.musicData.add(song);
+            AppContant.PlayContant.musicData.add(song);
         }
         cur.close();
     }

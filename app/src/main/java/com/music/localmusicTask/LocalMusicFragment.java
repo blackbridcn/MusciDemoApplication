@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.music.AppContant.MusicContant;
+import com.music.AppContant.AppContant;
 import com.music.R;
 
 import butterknife.BindView;
@@ -52,7 +52,7 @@ public class LocalMusicFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         localmusic.setLayoutManager(new LinearLayoutManager(getContext()));
      //   localmusic.addItemDecoration(new DividerItemDecoration(getContext(),1));
-        adapter = new LocalMusicAdapter(this, MusicContant.MusicPlayData.musicData);
+        adapter = new LocalMusicAdapter(this, AppContant.PlayContant.musicData);
         localmusic.setAdapter(adapter);
         return view;
     }
