@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.music.AppContant.AppContant;
 import com.music.R;
@@ -23,6 +24,8 @@ public class LocalMusicFragment extends Fragment {
     @BindView(R.id.localmusic)
     RecyclerView localmusic;
     Unbinder unbinder;
+    @BindView(R.id.tv_test)
+    TextView tvTest;
     private LocalMusicAdapter adapter;
 
     public LocalMusicFragment() {
@@ -51,9 +54,12 @@ public class LocalMusicFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_local_music, container, false);
         unbinder = ButterKnife.bind(this, view);
         localmusic.setLayoutManager(new LinearLayoutManager(getContext()));
-     //   localmusic.addItemDecoration(new DividerItemDecoration(getContext(),1));
+        //   localmusic.addItemDecoration(new DividerItemDecoration(getContext(),1));
         adapter = new LocalMusicAdapter(this, AppContant.PlayContant.musicData);
         localmusic.setAdapter(adapter);
+         String string = getResources().getString(R.string.string_test);
+         String format = String.format(string, 10, "zhangsan", 10.0222, Integer.MAX_VALUE);
+        tvTest.setText(format);
         return view;
     }
 

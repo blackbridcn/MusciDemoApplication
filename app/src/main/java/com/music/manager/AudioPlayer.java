@@ -10,7 +10,9 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.music.AppContant.AppContant;
+import com.music.enums.PlayModeEnum;
 import com.music.javabean.MusicData;
+import com.music.utils.SPUtils;
 import com.music.utils.StringUtils;
 import com.music.utils.ToastUtils;
 
@@ -19,13 +21,26 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.prefs.Preferences;
 
+import butterknife.internal.Utils;
+
 public class AudioPlayer {
     private static AudioPlayer instance;
+    //播放器状态
     private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARING = 1;
     private static final int STATE_PLAYING = 2;
     private static final int STATE_PAUSE = 3;
     private int state = STATE_IDLE;
+
+    //MusicPlayControl
+    // 播放命令
+    public static final int MUSIC_CONTROL_PLAY = 0;
+    // 暂停命令
+    public static final int MUSIC_CONTROL_PAUSE = 1;
+    // 上一首命令
+    public static final int MUSIC_CONTROL_PREVIOUS = 2;
+    // 下一首命令
+    public static final int MUSIC_CONTROL_NEXT = 3;
 
     private static final long TIME_UPDATE = 300L;
 
@@ -135,7 +150,7 @@ public class AudioPlayer {
         } else if (isPausing()) {
             startPlayer();
         } else {
-            play(getPlayPosition());
+            //play(getPlayPosition());
         }
     }
 
@@ -143,7 +158,7 @@ public class AudioPlayer {
         if (AppContant.PlayContant.currentPlayList.isEmpty()) {
             return;
         }
-
+        getNextPlayIndex(getPlayMode(), getCurrPlayIndex());
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:
@@ -157,6 +172,47 @@ public class AudioPlayer {
                 play(getPlayPosition() + 1);
                 break;
         }
+    }
+
+    public int getNextPlayIndex(int palyMode, int currentIndex, int playListSize, boolean isNext) {
+        if (playListSize <= 0) return -1;
+        int next = currentIndex;
+        switch (palyMode) {
+            case AppContant.MusicPlayMode.PLAY_MODE_ORDER:
+                if (isNext) {
+                    if (currentIndex == playListSize - 1)
+                        next = 0;
+                    else
+                        ++next;
+                } else {
+                    if (currentIndex == 0)
+                        next = playListSize - 1;
+                    else
+                        --next;
+                }
+
+                break;
+            case AppContant.MusicPlayMode.PLAY_MODE_RANDOM:
+                if (isNext) {
+                    if (currentIndex == playListSize - 1)
+                        next = 0;
+                    else
+                        ++next;
+                } else {
+                    if (currentIndex == 0)
+                        next = playListSize - 1;
+                    else
+                        --next;
+                }
+                break;
+            case AppContant.MusicPlayMode.PLAY_MODE_SINGLE:
+                if (playListSize - 1 <= 0) {
+                    newIndex = index;
+                } else
+                    newIndex = Utils.generateRandom(allCount - 1, index);
+                break;
+        }
+        return currentIndex;
     }
 
     public void startPlayer() {
@@ -207,7 +263,7 @@ public class AudioPlayer {
     }
 
     private int getNextPosition() {
-
+        return 0;
     }
 
     private Runnable mUpdatePlayProRunnable = new Runnable() {
@@ -258,6 +314,19 @@ public class AudioPlayer {
     public void removeMediaPlayerEventChanagerListener(onMediaPlayerEventChanagerListener listeners) {
         if (listeners != null)
             playerEventChanagerListeners.remove(listeners);
+    }
+
+    public void setPlayMode(int playModel) {
+        if (playModel >= 0 && playModel <= 2)
+            SPUtils.putIntValue(this.mContext, AppContant.MusicPlayMode.PLAY_MODEL_KEY, playModel);
+    }
+
+    public int getPlayMode() {
+        return SPUtils.getIntValue(this.mContext, AppContant.MusicPlayMode.PLAY_MODEL_KEY, AppContant.MusicPlayMode.PLAY_MODE_ORDER);
+    }
+
+    public int getCurrPlayIndex() {
+        return AppContant.PlayContant.getCurrentPlayIndex();
     }
 
 }

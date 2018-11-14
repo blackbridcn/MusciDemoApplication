@@ -10,6 +10,7 @@ public interface AppContant {
 
         public PlayContant() {
         }
+
         //播放列表
         public static List<MusicData> musicData = new ArrayList<>();
         //播放列表
@@ -25,6 +26,7 @@ public interface AppContant {
 
         /**
          * 添加到播放列表中并返回indext
+         *
          * @param data
          * @return
          */
@@ -61,8 +63,8 @@ public interface AppContant {
             return currentPlayIndex;
         }
 
-        public static void setCurrentPlayIndex(int index){
-            currentPlayIndex=index;
+        public static void setCurrentPlayIndex(int index) {
+            currentPlayIndex = index;
         }
 
         /*public static int getMesuicDataByIndext(int indext) {
@@ -71,10 +73,46 @@ public interface AppContant {
 
     }
 
+    /*
+     * 音乐播放模式
+     */
+    class MusicPlayMode {
+        public static final String PLAY_MODEL_KEY="play_model_key";
+        // 顺序播放
+        public static final int PLAY_MODE_ORDER = 0;
+        // 随机播放
+        public static final int PLAY_MODE_RANDOM = 1;
+        // 单曲循环
+        public static final int PLAY_MODE_SINGLE = 2;
+        // 播放模式数组
+        public static final int[] PLAY_MODE_ARRAY = {PLAY_MODE_ORDER, PLAY_MODE_RANDOM, PLAY_MODE_SINGLE};
+        // 当前播放模式，默认播放模式为顺序播放
+        public static int CURRENT_PLAY_MODE = PLAY_MODE_ARRAY[0];
+
+
+        public static void swichPlayLoopMode(playModeChangeLisener lisener) {
+            int max = PLAY_MODE_ARRAY.length - 1;
+            if (CURRENT_PLAY_MODE == max) {
+                CURRENT_PLAY_MODE = PLAY_MODE_ARRAY[0];
+                if (lisener != null)
+                    lisener.playModeChange(PLAY_MODE_ARRAY[max], PLAY_MODE_ARRAY[0]);
+            } else {
+                CURRENT_PLAY_MODE = CURRENT_PLAY_MODE + 1;
+                if (lisener != null)
+                    lisener.playModeChange(PLAY_MODE_ARRAY[CURRENT_PLAY_MODE - 1], PLAY_MODE_ARRAY[CURRENT_PLAY_MODE]);
+            }
+
+        }
+    }
+
+    interface playModeChangeLisener {
+        void playModeChange(int lastMode, int curerntModel);
+    }
+
     class NotifierContant {
-        public static final  String EXTRA_NOTIFICATION = "me.wcy.music.notification";
+        public static final String EXTRA_NOTIFICATION = "me.wcy.music.notification";
         public static final String MUSIC_LIST_TYPE = "music_list_type";
         public static final String TING_UID = "ting_uid";
-        public static final  String MUSIC = "music";
+        public static final String MUSIC = "music";
     }
 }
