@@ -1,6 +1,8 @@
 package com.music.AppContant;
 
+import com.music.application.AppApplication;
 import com.music.javabean.MusicData;
+import com.music.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +67,7 @@ public interface AppContant {
 
         public static void setCurrentPlayIndex(int index) {
             currentPlayIndex = index;
+            SPUtils.putIntValue(AppApplication.getContextObject(),AppContentKey.INSTANCE.getLAST_PLAY_INDEX(),index);
         }
 
         /*public static int getMesuicDataByIndext(int indext) {

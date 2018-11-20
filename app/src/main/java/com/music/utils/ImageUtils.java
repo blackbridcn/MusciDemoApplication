@@ -25,6 +25,7 @@ public class ImageUtils {
     }
 
     /**
+     * 图片的虚化
      * Stack Blur v1.0 from
      * http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
      * <p>

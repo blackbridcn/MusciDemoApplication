@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.music.AppContant.AppContant;
-import com.music.enums.PlayModeEnum;
+import com.music.AppContant.AppContentKey;
 import com.music.javabean.MusicData;
 import com.music.utils.SPUtils;
 import com.music.utils.StringUtils;
@@ -18,10 +18,6 @@ import com.music.utils.ToastUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.prefs.Preferences;
-
-import butterknife.internal.Utils;
 
 public class AudioPlayer {
     private static AudioPlayer instance;
@@ -71,6 +67,11 @@ public class AudioPlayer {
         mediaPlayer = new MediaPlayer();
         noisyFilter = new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
         mediaPlayer.setOnCompletionListener((mediaPlayer) -> next());
+        mediaPlayer.setOnErrorListener((mediaPlayer, what, extra) -> {
+            mediaPlayer.reset();
+            next();
+            return false;
+        });
         mediaPlayer.setOnPreparedListener((mediaPlayer) -> {
             if (isPlaying()) {
                 startPlayer();
@@ -98,11 +99,6 @@ public class AudioPlayer {
         if (music == null) return;
         int position = AppContant.PlayContant.addMusicToPlayList(music);
         play(position, music);
-    }
-
-
-    public void nextAudio() {
-
     }
 
     /**
@@ -150,7 +146,7 @@ public class AudioPlayer {
         } else if (isPausing()) {
             startPlayer();
         } else {
-            //play(getPlayPosition());
+            play(getLastPlayPosition());
         }
     }
 
@@ -158,64 +154,19 @@ public class AudioPlayer {
         if (AppContant.PlayContant.currentPlayList.isEmpty()) {
             return;
         }
-        getNextPlayIndex(getPlayMode(), getCurrPlayIndex());
-        PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
-        switch (mode) {
-            case SHUFFLE:
-                play(new Random().nextInt(musicList.size()));
-                break;
-            case SINGLE:
-                play(getPlayPosition());
-                break;
-            case LOOP:
-            default:
-                play(getPlayPosition() + 1);
-                break;
-        }
+        int index = getNextPosition();
+        play(index);
     }
 
-    public int getNextPlayIndex(int palyMode, int currentIndex, int playListSize, boolean isNext) {
-        if (playListSize <= 0) return -1;
-        int next = currentIndex;
-        switch (palyMode) {
-            case AppContant.MusicPlayMode.PLAY_MODE_ORDER:
-                if (isNext) {
-                    if (currentIndex == playListSize - 1)
-                        next = 0;
-                    else
-                        ++next;
-                } else {
-                    if (currentIndex == 0)
-                        next = playListSize - 1;
-                    else
-                        --next;
-                }
-
-                break;
-            case AppContant.MusicPlayMode.PLAY_MODE_RANDOM:
-                if (isNext) {
-                    if (currentIndex == playListSize - 1)
-                        next = 0;
-                    else
-                        ++next;
-                } else {
-                    if (currentIndex == 0)
-                        next = playListSize - 1;
-                    else
-                        --next;
-                }
-                break;
-            case AppContant.MusicPlayMode.PLAY_MODE_SINGLE:
-                if (playListSize - 1 <= 0) {
-                    newIndex = index;
-                } else
-                    newIndex = Utils.generateRandom(allCount - 1, index);
-                break;
+    public void pre() {
+        if (AppContant.PlayContant.currentPlayList.isEmpty()) {
+            return;
         }
-        return currentIndex;
+        int index = getPrePosition();
+        play(index);
     }
 
-    public void startPlayer() {
+    private void startPlayer() {
         if (!isPreparing() && !isPausing())
             return;
         if (audioFocusManager.requestAudioFocus()) {
@@ -231,11 +182,11 @@ public class AudioPlayer {
         }
     }
 
-    public void pausePlayer() {
+    private void pausePlayer() {
         pausePlayer(true);
     }
 
-    public void pausePlayer(boolean abandonAudioFocus) {
+    private void pausePlayer(boolean abandonAudioFocus) {
         if (!isPlaying()) {
             return;
         }
@@ -253,7 +204,7 @@ public class AudioPlayer {
         }
     }
 
-    public void stopPlayer() {
+    private void stopPlayer() {
         if (isIdle()) {
             return;
         }
@@ -263,7 +214,11 @@ public class AudioPlayer {
     }
 
     private int getNextPosition() {
-        return 0;
+        return PlayUtils.getNextPlayIndex(getPlayMode(), getCurrPlayIndex(), getPlayListSize(), true);
+    }
+
+    private int getPrePosition() {
+        return PlayUtils.getNextPlayIndex(getPlayMode(), getCurrPlayIndex(), getPlayListSize(), false);
     }
 
     private Runnable mUpdatePlayProRunnable = new Runnable() {
@@ -328,5 +283,14 @@ public class AudioPlayer {
     public int getCurrPlayIndex() {
         return AppContant.PlayContant.getCurrentPlayIndex();
     }
+
+    public int getPlayListSize() {
+        return AppContant.PlayContant.getCurrentPlaySize();
+    }
+
+    private int getLastPlayPosition() {
+        return SPUtils.getIntValue(this.mContext, AppContentKey.INSTANCE.getLAST_PLAY_INDEX(), 0);
+    }
+
 
 }
