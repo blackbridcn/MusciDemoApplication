@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface AppContant {
-    class PlayContant {
+   static class PlayContant {
 
         public PlayContant() {
         }
@@ -17,7 +17,7 @@ public interface AppContant {
         public static List<MusicData> musicData = new ArrayList<>();
         //播放列表
         public static List<MusicData> currentPlayList = musicData;
-        private static int currentPlayIndex = -1;
+        private static int currentPlayIndex =0;
 
         public static void setCurrentPlayData(List<MusicData> playist) {
             if (playist != null && !playist.isEmpty()) {

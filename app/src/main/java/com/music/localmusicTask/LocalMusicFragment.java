@@ -57,8 +57,8 @@ public class LocalMusicFragment extends Fragment {
         //   localmusic.addItemDecoration(new DividerItemDecoration(getContext(),1));
         adapter = new LocalMusicAdapter(this, AppContant.PlayContant.musicData);
         localmusic.setAdapter(adapter);
-         String string = getResources().getString(R.string.string_test);
-         String format = String.format(string, 10, "zhangsan", 10.0222, Integer.MAX_VALUE);
+        String string = getResources().getString(R.string.string_test);
+        String format = String.format(string, 10, "zhangsan", 10.0222, Integer.MAX_VALUE);
         tvTest.setText(format);
         return view;
     }

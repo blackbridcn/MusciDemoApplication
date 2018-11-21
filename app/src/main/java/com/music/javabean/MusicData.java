@@ -12,11 +12,11 @@ public class MusicData implements Serializable {
     // music name
     private String musicName;
     // music total duration
-    private int musicDuration;
+    private int duration;
     // music artist
-    private String musicArtist;
+    private String artist;
     // music album
-    private String musicAlbum;
+    private String album;
     // [本地]专辑ID
     private long albumId;
     // [在线]专辑封面路径
@@ -67,29 +67,14 @@ public class MusicData implements Serializable {
         this.musicName = musicName;
     }
 
-    public int getMusicDuration() {
-        return musicDuration;
+    public int getDuration() {
+        return duration;
     }
 
-    public void setMusicDuration(int musicDuration) {
-        this.musicDuration = musicDuration;
+    public void setDuration(int musicDuration) {
+        this.duration = musicDuration;
     }
 
-    public String getMusicArtist() {
-        return musicArtist;
-    }
-
-    public void setMusicArtist(String musicArtist) {
-        this.musicArtist = musicArtist;
-    }
-
-    public String getMusicAlbum() {
-        return musicAlbum;
-    }
-
-    public void setMusicAlbum(String musicAlbum) {
-        this.musicAlbum = musicAlbum;
-    }
 
     public String getMusicYear() {
         return musicYear;
@@ -147,6 +132,21 @@ public class MusicData implements Serializable {
         this.hasLrc = hasLrc ? 1 : 0;
     }
 
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public String getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
 
     public long getAlbumId() {
         return albumId;
@@ -167,10 +167,19 @@ public class MusicData implements Serializable {
     @Override
     public String toString() {
         return "MusicData{" +
+                "musicID=" + musicID +
                 ", fileName='" + fileName + '\'' +
                 ", musicName='" + musicName + '\'' +
-                ", musicAlbum='" + musicAlbum + '\'' +
+                ", duration=" + duration +
+                ", artist='" + artist + '\'' +
+                ", album='" + album + '\'' +
                 ", albumId=" + albumId +
+                ", coverPath='" + coverPath + '\'' +
+                ", musicYear='" + musicYear + '\'' +
+                ", fileType='" + fileType + '\'' +
+                ", fileSize='" + fileSize + '\'' +
+                ", dataFilePath='" + dataFilePath + '\'' +
+                ", sourceType=" + sourceType +
                 ", lrcPath='" + lrcPath + '\'' +
                 ", hasLrc=" + hasLrc +
                 '}';

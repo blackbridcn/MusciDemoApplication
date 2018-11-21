@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.music.R;
 import com.music.javabean.MusicData;
-import com.music.manager.AlbumCoverLoader;
+import com.music.manager.CoverLoader;
 
 import java.util.List;
 
@@ -39,8 +39,8 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         LocalMusicViewHolder holder= (LocalMusicViewHolder) viewHolder;
          MusicData data = this.musicData.get(position);
         holder.tvTitle.setText(data.getMusicName());
-        holder.tvArtist.setText(data.getMusicArtist());
-         Bitmap bitmap = AlbumCoverLoader.getInstance().loadThumb(data);
+        holder.tvArtist.setText(data.getArtist());
+         Bitmap bitmap = CoverLoader.getInstance().loadThumb(data);
         holder.ivCover.setImageBitmap(bitmap);
     }
 

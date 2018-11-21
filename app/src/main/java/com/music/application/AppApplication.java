@@ -3,7 +3,8 @@ package com.music.application;
 import android.app.Application;
 import android.content.Context;
 
-import com.music.manager.AlbumCoverLoader;
+import com.music.manager.AudioPlayer;
+import com.music.manager.CoverLoader;
 
 public class AppApplication extends Application {
     private static Context context;
@@ -11,7 +12,9 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AlbumCoverLoader.getInstance().init(this);
+        CoverLoader.getInstance().init(this);
+        AudioPlayer.initAudioManager(this);
+
         instance = this;
         //获取Context
         context = getApplicationContext();

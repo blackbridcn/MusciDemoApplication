@@ -3,6 +3,8 @@ package com.music.utils;
 import android.graphics.Bitmap;
 import android.os.Build;
 
+import static java.lang.System.gc;
+
 public class BitmapUitls {
 
     /**
@@ -32,6 +34,26 @@ public class BitmapUitls {
         }
         // 在低版本中用一行的字节x高度
         return bitmap.getRowBytes() * bitmap.getHeight() / 1024;                //earlier version
+    }
+
+    /**
+     * 复制位图<br>
+     * 根据该位图的大小产生一个新位图，根据指定的结构设置新位图的结构，然后把位图的像素拷贝到新位图中。如果不支持该转换，或者分配内存失败，
+     * 那就返回NULL。返回的位图和原图有同样的像素密度 方 法 名：copy <br>
+     * @param paramBitmap 源
+     * @param config
+     * @param isMutable
+     * @return Bitmap
+     */
+    public static Bitmap copy(Bitmap paramBitmap, Bitmap.Config config, boolean isMutable) {
+        Bitmap bitmap;
+        try {
+            bitmap = paramBitmap.copy(config, isMutable);
+        } catch (OutOfMemoryError localOutOfMemoryError) {
+            gc();
+            bitmap = paramBitmap.copy(config, isMutable);
+        }
+        return bitmap;
     }
 
 

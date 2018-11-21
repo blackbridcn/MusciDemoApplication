@@ -109,9 +109,9 @@ public class LocalMusicUitls {
                     }
                 }
             }
-            song.setMusicDuration(cur.getInt(3));
-            song.setMusicArtist(cur.getString(4));
-            song.setMusicAlbum(cur.getString(5));
+            song.setDuration(cur.getInt(3));
+            song.setArtist(cur.getString(4));
+            song.setAlbum(cur.getString(5));
             if (cur.getString(6) != null) {
                 song.setMusicYear(cur.getString(6));
             } else {

@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.music.AppContant.AppContant;
 import com.music.AppContant.AppContentKey;
@@ -73,7 +74,7 @@ public class AudioPlayer {
             return false;
         });
         mediaPlayer.setOnPreparedListener((mediaPlayer) -> {
-            if (isPlaying()) {
+            if (isPreparing()) {
                 startPlayer();
             }
         });
@@ -88,6 +89,10 @@ public class AudioPlayer {
         if (instance == null) {
             instance = new AudioPlayer(mContext);
         }
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
     }
 
     /**
@@ -108,6 +113,7 @@ public class AudioPlayer {
      */
     public void play(int position) {
         if (position >= 0 && AppContant.PlayContant.getCurrentPlaySize() > position) {
+            Log.e("TAG", "play: ----------------> " + position);
             AppContant.PlayContant.setCurrentPlayIndex(position);
             play(position, AppContant.PlayContant.getCurrentPlayData());
         }
@@ -115,6 +121,7 @@ public class AudioPlayer {
 
     public void play(int index, MusicData music) {
         if (index == -1 || music == null || StringUtils.isEmpty(music.getDataFilePath())) return;
+        Log.e("TAG", "play: -------------->" + music.getMusicName());
         AppContant.PlayContant.setCurrentPlayIndex(index);
         mediaPlayer.reset();
         try {
@@ -124,6 +131,7 @@ public class AudioPlayer {
             ToastUtils.show("当前歌曲无法播放");
             return;
         }
+        state=STATE_PREPARING;
         mediaPlayer.prepareAsync();
         performPlayEvent(music);
     }
@@ -158,7 +166,7 @@ public class AudioPlayer {
         play(index);
     }
 
-    public void pre() {
+    public void previous() {
         if (AppContant.PlayContant.currentPlayList.isEmpty()) {
             return;
         }
@@ -166,7 +174,7 @@ public class AudioPlayer {
         play(index);
     }
 
-    private void startPlayer() {
+    public void startPlayer() {
         if (!isPreparing() && !isPausing())
             return;
         if (audioFocusManager.requestAudioFocus()) {
@@ -182,11 +190,11 @@ public class AudioPlayer {
         }
     }
 
-    private void pausePlayer() {
+    public void pausePlayer() {
         pausePlayer(true);
     }
 
-    private void pausePlayer(boolean abandonAudioFocus) {
+    public void pausePlayer(boolean abandonAudioFocus) {
         if (!isPlaying()) {
             return;
         }

@@ -10,15 +10,27 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.music.AppContant.AppContant;
+import com.music.executor.ControlPanel;
 import com.music.localmusicTask.LocalMusicFragment;
+import com.music.manager.AudioPlayer;
 import com.music.service.MediaService;
 import com.music.utils.LocalMusicUitls;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
+    @BindView(R.id.fl_play_bar)
+    FrameLayout playBar;
+
+
+    private ControlPanel controlPanel;
+
     private MediaService.MediaPlayerBinder mediaPlayerBinder;
     private static String TAG = MainActivity.class.getName();
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -45,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         LocalMusicUitls.getInstance().getMusicList(this);
         Intent intent = new Intent(this, MediaService.class);
         bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
@@ -57,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         songartist = (TextView) header.findViewById(R.id.song_artist);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         localMusicFragment = new LocalMusicFragment();
+        controlPanel = new ControlPanel(playBar);
+        AudioPlayer.getInstance().addMediaPlayerEventChanagerListener(controlPanel);
         transaction.add(R.id.container_frame, localMusicFragment, LocalMusicFragment.class.getName()).show(localMusicFragment).commit();
     }
 }

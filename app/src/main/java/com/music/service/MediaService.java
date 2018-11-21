@@ -7,6 +7,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.music.manager.AudioMediaSessionManager;
+import com.music.manager.PlayNotifier;
 import com.music.utils.ToastUtils;
 
 import java.io.IOException;
@@ -27,6 +29,8 @@ public class MediaService extends Service {
     public void onCreate() {
         super.onCreate();
         ToastUtils.init(this);
+        AudioMediaSessionManager.getInstance().init(this);
+        PlayNotifier.get().init(this);
         Log.e(TAG, "onCreate: ---------------------------->");
     }
 

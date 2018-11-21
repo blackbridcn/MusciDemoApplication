@@ -9,8 +9,6 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
     private AudioManager audioManager;
     private boolean isPausedByFocusLossTransient;
 
-
-
     public AudioFocusManager(Context context) {
         audioManager = (AudioManager) context.getSystemService(AUDIO_SERVICE);
     }
@@ -35,23 +33,23 @@ public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListene
                 }
 
                 // 恢复音量
-               // AudioPlayer.getInstance().getMediaPlayer().setVolume(1f, 1f);
+               AudioPlayer.getInstance().getMediaPlayer().setVolume(1f, 1f);
 
                 isPausedByFocusLossTransient = false;
                 break;
             // 永久丢失焦点，如被其他播放器抢占
             case AudioManager.AUDIOFOCUS_LOSS:
-              //  AudioPlayer.getInstance().pausePlayer();
+              AudioPlayer.getInstance().pausePlayer();
                 break;
             // 短暂丢失焦点，如来电
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-             //   AudioPlayer.getInstance().pausePlayer(false);
+               AudioPlayer.getInstance().pausePlayer(false);
                 isPausedByFocusLossTransient = true;
                 break;
             // 瞬间丢失焦点，如通知
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 // 音量减小为一半
-               // AudioPlayer.getInstance().getMediaPlayer().setVolume(0.5f, 0.5f);
+                AudioPlayer.getInstance().getMediaPlayer().setVolume(0.5f, 0.5f);
                 break;
         }
     }

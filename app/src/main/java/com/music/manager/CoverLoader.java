@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AlbumCoverLoader {
+public class CoverLoader {
 
     public static final int THUMBNAIL_MAX_LENGTH = 500;
     private static final String KEY_NULL = "null";
@@ -37,15 +37,15 @@ public class AlbumCoverLoader {
         BLUR//blur
     }
 
-    public static AlbumCoverLoader getInstance() {
+    public static CoverLoader getInstance() {
         return SingletonHolder.instance;
     }
 
     private static class SingletonHolder {
-        private static AlbumCoverLoader instance = new AlbumCoverLoader();
+        private static CoverLoader instance = new CoverLoader();
     }
 
-    private AlbumCoverLoader() {
+    private CoverLoader() {
     }
 
     public void init(Context mContext) {
