@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * https://github.com/wangchenyan/lrcview
+ */
 public class LrcEntry implements Comparable<LrcEntry> {
     @Override
     public int compareTo(@NonNull LrcEntry entry) {
