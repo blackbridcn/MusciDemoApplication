@@ -8,7 +8,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 import com.music.AppContant.AppContant;
 import com.music.AppContant.AppContentKey;
@@ -83,6 +82,10 @@ public class AudioPlayer {
             for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners)
                 listener.onBufferingUpdate(percent);
         });
+        mediaPlayer.setOnSeekCompleteListener((mediaPlayer)->{
+
+        });
+        mediaPlayer.setOnSubtitleDataListener();
     }
 
     public static void initAudioManager(Context mContext) {
@@ -113,7 +116,6 @@ public class AudioPlayer {
      */
     public void play(int position) {
         if (position >= 0 && AppContant.PlayContant.getCurrentPlaySize() > position) {
-            Log.e("TAG", "play: ----------------> " + position);
             AppContant.PlayContant.setCurrentPlayIndex(position);
             play(position, AppContant.PlayContant.getCurrentPlayData());
         }
@@ -121,7 +123,6 @@ public class AudioPlayer {
 
     public void play(int index, MusicData music) {
         if (index == -1 || music == null || StringUtils.isEmpty(music.getDataFilePath())) return;
-        Log.e("TAG", "play: -------------->" + music.getMusicName());
         AppContant.PlayContant.setCurrentPlayIndex(index);
         mediaPlayer.reset();
         try {
