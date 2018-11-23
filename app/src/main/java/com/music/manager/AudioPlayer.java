@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -82,10 +83,17 @@ public class AudioPlayer {
             for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners)
                 listener.onBufferingUpdate(percent);
         });
-        mediaPlayer.setOnSeekCompleteListener((mediaPlayer)->{
+        mediaPlayer.setOnSeekCompleteListener((mediaPlayer) -> {
 
         });
-        mediaPlayer.setOnSubtitleDataListener();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            mediaPlayer.setOnSubtitleDataListener((mediaPlayer, subtitleData) -> {
+            }, new Handler());
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            mediaPlayer.setOnSubtitleDataListener((mediaPlayer, subtitleData) -> {
+            });
+        }
     }
 
     public static void initAudioManager(Context mContext) {
@@ -132,7 +140,7 @@ public class AudioPlayer {
             ToastUtils.show("当前歌曲无法播放");
             return;
         }
-        state=STATE_PREPARING;
+        state = STATE_PREPARING;
         mediaPlayer.prepareAsync();
         performPlayEvent(music);
     }

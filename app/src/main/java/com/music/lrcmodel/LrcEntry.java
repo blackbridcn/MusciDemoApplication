@@ -6,6 +6,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,6 +24,8 @@ import java.util.regex.Pattern;
  * https://github.com/wangchenyan/lrcview
  */
 public class LrcEntry implements Comparable<LrcEntry> {
+    private static String TAG = LrcEntry.class.getName();
+
     @Override
     public int compareTo(@NonNull LrcEntry entry) {
         if (entry == null) {
@@ -74,13 +77,20 @@ public class LrcEntry implements Comparable<LrcEntry> {
         return staticLayout.getHeight();
     }
 
+    /**
+     * 解析歌词
+     *
+     * @param lrcFile
+     * @return
+     */
     static List<LrcEntry> parseLrc(File lrcFile) {
         if (lrcFile == null || !lrcFile.exists()) return null;
         List<LrcEntry> entryList = new ArrayList<>();
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(lrcFile)));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(lrcFile), "utf-8"));
             String line;
             while ((line = reader.readLine()) != null) {
+                Log.e(TAG, "parseLrc: -----------> " + line);
                 List<LrcEntry> list = parseLine(line);
                 if (list != null && !list.isEmpty()) {
                     entryList.addAll(list);
