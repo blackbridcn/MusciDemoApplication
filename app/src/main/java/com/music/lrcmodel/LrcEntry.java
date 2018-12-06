@@ -159,10 +159,9 @@ public class LrcEntry implements Comparable<LrcEntry> {
         //.匹配除"\r\n"之外的任何单个字符
         Matcher lineMatcher = Pattern.compile("((\\[\\d\\d:\\d\\d\\.\\d{2,3}\\])+)(.+)").matcher(line);
         if (!lineMatcher.matches()) {
-            Log.e(TAG, "parseLine: ------------>" );
             return null;
-        }
-        // [01:43.33][00:16.27]她总是只留下电话号码
+        }        // [01:43.33][00:16.27]她总是只留下电话号码
+
         String times = lineMatcher.group(1);
         String text = lineMatcher.group(3);
         List<LrcEntry> entryList = new ArrayList<>();
@@ -177,5 +176,13 @@ public class LrcEntry implements Comparable<LrcEntry> {
         }
         return entryList;
 
+    }
+
+    public float getOffset() {
+        return offset;
+    }
+
+    public void setOffset(float offset) {
+        this.offset = offset;
     }
 }

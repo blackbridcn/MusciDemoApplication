@@ -3,20 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <FrameLayout
-        android:id="@+id/container_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+
+        <FrameLayout
+            android:id="@+id/container_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <LinearLayout
-            android:layout_gravity="bottom"
             android:layout_width="match_parent"
-            android:layout_height="57dp">
-            <include layout="@layout/include_play_bar"/>
+            android:layout_height="57dp"
+            android:layout_gravity="bottom">
+
+            <include layout="@layout/include_play_bar" />
         </LinearLayout>
 
     </FrameLayout>
