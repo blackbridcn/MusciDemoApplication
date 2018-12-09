@@ -1,5 +1,7 @@
 package com.music;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -20,6 +22,8 @@ import com.music.localmusicTask.LocalMusicFragment;
 import com.music.manager.AudioPlayer;
 import com.music.service.MediaService;
 import com.music.utils.LocalMusicUitls;
+
+import org.com.comlibs.perminssion.RunnTimePreminssion;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,12 +57,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView songtitle, songartist;
     private LocalMusicFragment localMusicFragment;
 
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        LocalMusicUitls.getInstance().getMusicList(this);
+
         Intent intent = new Intent(this, MediaService.class);
         bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -70,8 +75,19 @@ public class MainActivity extends AppCompatActivity {
         songartist = (TextView) header.findViewById(R.id.song_artist);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         localMusicFragment = new LocalMusicFragment();
-        controlPanel = new ControlPanel(playBar);
+        controlPanel = new ControlPanel(this, playBar);
         AudioPlayer.getInstance().addMediaPlayerEventChanagerListener(controlPanel);
         transaction.add(R.id.container_frame, localMusicFragment, LocalMusicFragment.class.getName()).show(localMusicFragment).commit();
+        RunnTimePreminssion.requestEach(this, ((permission, granted, requestAgain) -> {
+                    if (granted) {
+                        LocalMusicUitls.getInstance().getMusicList(this);
+                    }
+                })
+                , Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.READ_PHONE_NUMBERS,
+                Manifest.permission.READ_PHONE_STATE);
+
     }
 }

@@ -37,15 +37,17 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        Log.e(TAG, "onCreate: ----->");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Log.e(TAG, "onCreate: ----------------------》" );
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Main2Activity.this, MediaService.class);
-                bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
+                Main2Activity.this.finish();
+                Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+              //  startActivity(intent);
+                //bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
 
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -53,4 +55,39 @@ public class Main2Activity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e(TAG, "onStart: ----->");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume: ----->");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG, "onRestart: ----->");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e(TAG, "onPause: ----->");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.e(TAG, "onStop: ----->");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy: ----->");
+    }
 }

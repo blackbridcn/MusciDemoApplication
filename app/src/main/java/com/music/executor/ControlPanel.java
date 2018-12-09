@@ -1,12 +1,15 @@
 package com.music.executor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.music.Main2Activity;
+import com.music.MainActivity;
 import com.music.R;
 import com.music.javabean.MusicData;
 import com.music.manager.AudioPlayer;
@@ -24,9 +27,10 @@ public class ControlPanel implements View.OnClickListener,onMediaPlayerEventChan
     private ImageView vPlayBarPlaylist;
     private ProgressBar mProgressBar;
     private View view;
-
-    public ControlPanel(View controlLayout) {
+    MainActivity mainActivity;
+    public ControlPanel(MainActivity mainActivity,View controlLayout) {
         this.view = controlLayout;
+        this.mainActivity=mainActivity;
          ivPlayBarCover = view.findViewById(R.id.iv_play_bar_cover);
         tvPlayBarTitle = view.findViewById(R.id.tv_play_bar_title);
         tvPlayBarArtist = view.findViewById(R.id.tv_play_bar_artist);
@@ -37,6 +41,7 @@ public class ControlPanel implements View.OnClickListener,onMediaPlayerEventChan
         ivPlayBarPlay.setOnClickListener(this);
         ivPlayBarNext.setOnClickListener(this);
         vPlayBarPlaylist.setOnClickListener(this);
+        ivPlayBarCover.setOnClickListener(this);
         onPlayChange(AudioPlayer.getInstance().getPlayMusic());
     }
 
@@ -54,6 +59,10 @@ public class ControlPanel implements View.OnClickListener,onMediaPlayerEventChan
               //  Intent intent = new Intent(context, PlaylistActivity.class);
                // context.startActivity(intent);
                 break;
+            case R.id.iv_play_bar_cover:
+                Intent intent = new Intent(mainActivity, Main2Activity.class);
+                mainActivity.startActivity(intent);
+            break;
         }
     }
 
