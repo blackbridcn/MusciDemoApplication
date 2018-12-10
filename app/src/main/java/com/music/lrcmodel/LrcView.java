@@ -363,6 +363,19 @@ public class LrcView extends View {
         mAnimator.start();
     }
 
+
+    /**
+     * 设置歌词为空时屏幕中央显示的文字，如“暂无歌词”
+     */
+    public void setLabel(final String label) {
+        runOnUi(new Runnable() {
+            @Override
+            public void run() {
+                mDefaultLabel = label;
+                invalidate();
+            }
+        });
+    }
     private void reset() {
         endAnimation();
         mScroller.forceFinished(true);

@@ -266,6 +266,21 @@ public class AudioPlayer {
         return state == STATE_IDLE;
     }
 
+    /**
+     * 跳转到指定的时间位置
+     *
+     * @param msec 时间
+     */
+    public void seekTo(int msec) {
+        if (isPlaying() || isPausing()) {
+            mediaPlayer.seekTo(msec);
+            AudioMediaSessionManager.getInstance().updatePlaybackState();
+            for (onMediaPlayerEventChanagerListener listener : playerEventChanagerListeners) {
+                listener.updatePlayProgress(msec);
+            }
+        }
+    }
+
     public long getAudioPosition() {
         if (isPlaying() || isPausing()) {
             return mediaPlayer.getCurrentPosition();

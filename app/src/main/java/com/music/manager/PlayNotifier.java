@@ -42,15 +42,15 @@ public class PlayNotifier {
         if (music == null) {
             return;
         }
-        playService.startForeground(NOTIFICATION_ID, buildNotification(playService, music, true));
+      //  playService.startForeground(NOTIFICATION_ID, buildNotification(playService, music, true));
     }
 
     public void showPause(MusicData music) {
         if (music == null) {
             return;
         }
-        playService.stopForeground(false);
-        notificationManager.notify(NOTIFICATION_ID, buildNotification(playService, music, false));
+      //  playService.stopForeground(false);
+        //notificationManager.notify(NOTIFICATION_ID, buildNotification(playService, music, false));
     }
 
     private Notification buildNotification(Context context, MusicData music, boolean isPlaying) {

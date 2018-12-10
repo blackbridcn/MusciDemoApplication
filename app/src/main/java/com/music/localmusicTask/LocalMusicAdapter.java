@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.music.AppContant.AppContant;
 import com.music.R;
 import com.music.javabean.MusicData;
 import com.music.manager.CoverLoader;
@@ -22,9 +23,9 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private LocalMusicFragment localMusicFragment;
     private List<MusicData> musicData;
 
-    public LocalMusicAdapter(LocalMusicFragment localMusicFragment, List<MusicData> musicData) {
+    public LocalMusicAdapter(LocalMusicFragment localMusicFragment) {
         this.localMusicFragment = localMusicFragment;
-        this.musicData = musicData;
+        this.musicData = AppContant.PlayContant.musicData;
     }
 
     @NonNull

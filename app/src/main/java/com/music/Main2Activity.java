@@ -8,14 +8,24 @@ import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
-import com.music.AppContant.AppContant;
 import com.music.service.MediaService;
+import com.music.widget.ObservableScrollView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class Main2Activity extends AppCompatActivity {
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @BindView(R.id.scrollable)
+    ObservableScrollView scrollable;
+    @BindView(R.id.headerview)
+    LinearLayout headerview;
     private MediaService.MediaPlayerBinder mediaPlayerBinder;
     private static String TAG = Main2Activity.class.getName();
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -23,8 +33,8 @@ public class Main2Activity extends AppCompatActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mediaPlayerBinder = (MediaService.MediaPlayerBinder) iBinder;
             Log.e(TAG, "onServiceConnected: --------------------->");
-            String filePath = AppContant.PlayContant.musicData.get(0).getDataFilePath();
-           // mediaPlayerBinder.play(filePath);
+           // String filePath = AppContant.PlayContant.musicData.get(0).getDataFilePath();
+            // mediaPlayerBinder.play(filePath);
         }
 
         @Override
@@ -33,25 +43,36 @@ public class Main2Activity extends AppCompatActivity {
             mediaPlayerBinder = null;
         }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        ButterKnife.bind(this);
         Log.e(TAG, "onCreate: ----->");
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Main2Activity.this.finish();
                 Intent intent = new Intent(Main2Activity.this, MainActivity.class);
-              //  startActivity(intent);
+                //  startActivity(intent);
                 //bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
 
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
+        });
+        init();
+    }
+
+    private void init() {
+         ViewGroup.LayoutParams layoutParams = headerview.getLayoutParams();
+        int height = headerview.getLayoutParams().height;
+        scrollable.setOnObservableScrollChangeListener((crollView, x, y, oldx, oldy) -> {
+            Log.e(TAG, "init: ------------> y :"+y );
+            headerview.setPadding(0,-(height-y),0,0);
+
         });
     }
 

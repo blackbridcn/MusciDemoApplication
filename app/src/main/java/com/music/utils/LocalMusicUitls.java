@@ -62,6 +62,7 @@ public class LocalMusicUitls {
             cur.close();
             cur = null;
         }
+        AppContant.PlayContant.musicData.clear();
         // MediaStore.Audio.Media.DISPLAY_NAME  歌曲名完整包括.MP3  etc 新韵传音 - 心经 (梵唱印度版).mp3
         // MediaStore.Audio.Media.TITLE,    歌曲名 etc 新韵传音 - 心经 (梵唱印度版)
         //MediaStore.Audio.Media.DATA歌曲资源路径

@@ -1,14 +1,12 @@
 package com.music.executor;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.music.Main2Activity;
 import com.music.MainActivity;
 import com.music.R;
 import com.music.javabean.MusicData;
@@ -60,8 +58,9 @@ public class ControlPanel implements View.OnClickListener,onMediaPlayerEventChan
                // context.startActivity(intent);
                 break;
             case R.id.iv_play_bar_cover:
-                Intent intent = new Intent(mainActivity, Main2Activity.class);
-                mainActivity.startActivity(intent);
+                mainActivity.showPlayingFragment();
+              /*  Intent intent = new Intent(mainActivity, Main2Activity.class);
+                mainActivity.startActivity(intent);*/
             break;
         }
     }

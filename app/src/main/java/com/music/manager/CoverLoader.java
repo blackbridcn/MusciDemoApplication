@@ -97,6 +97,13 @@ public class CoverLoader {
         return loadCover(null, type);
     }
 
+    public Bitmap loadRound(MusicData music) {
+        return loadCover(music, Type.ROUND);
+    }
+
+    public Bitmap loadBlur(MusicData music){
+        return loadCover(music, Type.BLUR);
+    }
     private Bitmap loadCoverByType(MusicData data, Type type) {
         Bitmap bitmap;
         if (data.getSourceType() == MusicData.sourceType.LOCAL) {
@@ -105,6 +112,13 @@ public class CoverLoader {
             bitmap = loadCoverFromFile(data.getCoverPath());
         }
         return bitmap;
+    }
+
+    public void setRoundLength(int roundLength) {
+        if (this.roundLength != roundLength) {
+            this.roundLength = roundLength;
+            cacheMap.get(Type.ROUND).evictAll();
+        }
     }
 
     private String getAlbumKey(MusicData data) {

@@ -1,26 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Main2Activity">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/black"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+    </LinearLayout>
+
+    <com.music.widget.ObservableScrollView
+        android:id="@+id/scrollable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        android:layout_marginTop="-30dp"
+        android:background="@color/colorPrimary">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
 
-    </android.support.design.widget.AppBarLayout>
+            <LinearLayout
+                android:id="@+id/headerview"
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:paddingTop="-100dp"
+                android:orientation="vertical">
 
-    <include layout="@layout/content_main2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="900dp">
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.music.widget.ObservableScrollView>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -29,5 +59,4 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
-
-</FrameLayout>
+</RelativeLayout>
