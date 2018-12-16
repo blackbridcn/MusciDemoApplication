@@ -31,18 +31,23 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-         View view = LayoutInflater.from(localMusicFragment.getContext()).inflate(R.layout.view_holder_music, null);
+        View view = LayoutInflater.from(localMusicFragment.getContext()).inflate(R.layout.view_holder_music, null);
         return new LocalMusicViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        LocalMusicViewHolder holder= (LocalMusicViewHolder) viewHolder;
-         MusicData data = this.musicData.get(position);
+        LocalMusicViewHolder holder = (LocalMusicViewHolder) viewHolder;
+        MusicData data = this.musicData.get(position);
         holder.tvTitle.setText(data.getMusicName());
         holder.tvArtist.setText(data.getArtist());
-         Bitmap bitmap = CoverLoader.getInstance().loadThumb(data);
+        Bitmap bitmap = CoverLoader.getInstance().loadThumb(data);
         holder.ivCover.setImageBitmap(bitmap);
+        holder.view.setOnClickListener((view) -> {
+            if(listener!=null){
+                listener.onItemClick(view,position,data);
+            }
+        });
     }
 
     @Override
@@ -70,5 +75,15 @@ public class LocalMusicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             ButterKnife.bind(this, view);
             this.view = view;
         }
+    }
+
+    private OnItemClickListener listener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    interface OnItemClickListener {
+        void onItemClick(View view, int position, MusicData data);
     }
 }

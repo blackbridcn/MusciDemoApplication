@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/test_a"
+        android:text="TEST_A"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/test_b"
+        android:text="TEST_B"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

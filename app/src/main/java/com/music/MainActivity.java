@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.music.executor.ControlPanel;
 import com.music.localmusicTask.LocalMusicFragment;
@@ -22,6 +23,8 @@ import com.music.lrcmodel.PlayFragment;
 import com.music.manager.AudioPlayer;
 import com.music.service.MediaService;
 import com.music.utils.LocalMusicUitls;
+import com.music.utils.binding.OnClick;
+import com.music.utils.binding.ViewBinder;
 
 import org.com.comlibs.perminssion.RunnTimePreminssion;
 
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        ViewBinder.bind(this);
         Intent intent = new Intent(this, MediaService.class);
         bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -92,6 +95,19 @@ public class MainActivity extends AppCompatActivity {
         AudioPlayer.getInstance().addMediaPlayerEventChanagerListener(controlPanel);
     }
 
+    @OnClick({R.id.test_a, R.id.test_b})
+    private void tsetMeth(View view) {
+        switch (view.getId()) {
+            case R.id.test_a:
+                Toast.makeText(this, "TAST_A", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.test_b:
+                Toast.makeText(this, "TAST_B", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+
     PlayFragment mPlayFragment;
 
     public void showPlayingFragment() {
@@ -119,5 +135,15 @@ public class MainActivity extends AppCompatActivity {
         ft.hide(mPlayFragment);
         ft.commitAllowingStateLoss();
         isPlayFragmentShow = false;
+    }
+
+    @butterknife.OnClick({R.id.test_a, R.id.test_b})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.test_a:
+                break;
+            case R.id.test_b:
+                break;
+        }
     }
 }

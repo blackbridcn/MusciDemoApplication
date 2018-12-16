@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.music.AppContant.AppContant;
 import com.music.R;
+import com.music.manager.AudioPlayer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +60,9 @@ public class LocalMusicFragment extends Fragment {
         String string = getResources().getString(R.string.string_test);
         String format = String.format(string, 10, "zhangsan", 10.0222, Integer.MAX_VALUE);
         tvTest.setText(format);
+        adapter.setOnItemClickListener((views,  position,  data)->{
+            AudioPlayer.getInstance().addAndPlay(data);
+        });
         return view;
     }
 
